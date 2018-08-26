@@ -69,7 +69,7 @@ new Vue({
     start: function() {
       this.state = STATES.STARTED;
       this.tick();
-      this.interval = setInterval(this._tick, 1000);
+      this.interval = setInterval(this.tick, 1000);
     },
     pause: function() {
       this.state = STATES.PAUSED;
