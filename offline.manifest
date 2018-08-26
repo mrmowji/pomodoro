@@ -1,7 +1,6 @@
 CACHE MANIFEST
 scripts/semantic/semantic.min.js
 scripts/vue/vue.min.js
-scripts/offline.js
 scripts/app.js
 https://fonts.googleapis.com/css?family=Roboto:300,400,700
 statics/fonts/eot/brand-icons.eot
