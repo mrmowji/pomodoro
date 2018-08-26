@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html manifest="offline.manifest">
+
+<head>
+  <title>Pomodoro</title>
+  <meta charset="utf-8">
+
+  <script src="scripts/vue/vue.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
+  <link href="statics/styles/semantic/semantic.css" rel="stylesheet">
+  <link href="statics/styles/site.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <template id="progress-circle">
+    <svg class="progress circle" viewBox="1.6 1.6 16.8 16.8">
+      <circle class="background" cx="10" cy="10" r="8"/></circle>
+      <circle class="progress" cx="10" cy="10" r="7" :stroke-dasharray="Math.PI * 2 * 7 + (Math.PI / 2)"
+        :stroke-dashoffset="Math.PI * 2 * 7 * percentage + (Math.PI /2)" /></circle>
+      <text x="62%" y="70%">{{ Math.floor(percentage * 100) }}%</text>
+    </svg>
+  </template>
+
+  <div id="app" class="ui basic segment">
+    <div class="ui text container">
+      <div class="ui stackable grid two columns">
+        <div class="column">
+          <h1 class="ui header">
+            Pomodoro
+            <div class="sub header">
+              Another interval timer
+            </div>
+          </h1>
+          <div class="ui divider"></div>
+          <div class="parameters">
+            <div class="ui fluid labeled input">
+              <label class="ui label">Rounds</label>
+              <input min="1" v-model="numberOfRounds" :disabled="state === 'started' || state === 'paused'" type="number">
+            </div>
+            <div class="ui fluid labeled input">
+              <label class="ui label">Intervals</label>
+              <input min="1" v-model="numberOfIntervals" :disabled="state === 'started' || state === 'paused'" type="number">
+            </div>
+          </div>
+          <div class="ui segment grid two columns intervals">
+            <div v-for="interval in intervals" class="row">
+              <div class="column">
+                <div class="ui fluid labeled input">
+                  <label class="ui label">Title</label>
+                  <input v-model="interval.title" type="text" :disabled="state === 'started' || state === 'paused'">
+                </div>
+              </div>
+              <div class="column">
+                <div class="ui fluid right labeled input">
+                  <input min="1" v-model="interval.length" type="number" :disabled="state === 'started' || state === 'paused'">
+                  <label class="ui label">sec.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <h2 class="interval title">{{ title }}</h2>
+          <div is="progress-circle" :percentage="secondsPassed / totalTimeInSeconds"></div>
+          <div class="ui divider"></div>
+          <div class="ui fluid labeled icon buttons">
+            <button class="ui blue button" :disabled="state === 'started'" @click="start()">
+              <i class="play icon"></i>Start
+            </button>
+            <button class="ui orange button" :disabled="state !== 'started'" @click="pause()">
+              <i class="pause icon"></i>Pause
+            </button>
+            <button class="ui red button" :disabled="state !== 'started' && state !== 'paused'" @click="stop()">
+              <i class="stop icon"></i>Stop
+            </button>
+          </div>
+          <div class="ui divider"></div>
+          <div class="ui three columns grid">
+            <div class="row">
+              <div class="left aligned column large text" data-tooltip="Current Task's Remaining Time" data-position="bottom left">
+                {{ leftPaddedMinute }} : {{ leftPaddedSecond }}
+              </div>
+              <div class="center aligned column large text" data-tooltip="Total Remaining Time" data-position="bottom center">
+                {{ totalTimeInSeconds - secondsPassed }}
+              </div>
+              <div class="right aligned column large text" data-tooltip="Current Round / Number of Rounds" data-position="bottom right">
+                {{ currentRound }} / {{ numberOfRounds }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui segment grid two columns middle aligned">
+        <div class="row">
+          <div class="column">
+            Mojtaba Javan 2018
+          </div>
+          <div class="column right aligned">
+            <a href="mailto:javan.mojtaba@gmail.com" title="Email" class="ui icon button">
+              <i class="envelope icon"></i>
+            </a>
+            <a href="https://www.instagram.com/mrmowji" title="Instagram" class="ui icon button">
+              <i class="instagram icon"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/mrmowji" title="LinkedIn" class="ui icon button">
+              <i class="linkedin icon"></i>
+            </a>
+            <a href="https://t.me/mrmowji" title="Telegram" class="ui icon button">
+              <i class="telegram icon"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/app.js"></script>
+  <!--<script src="scripts/offline.js"></script>-->
+</body>
+</html>

@@ -1,0 +1,24 @@
+CACHE MANIFEST
+scripts/semantic/semantic.min.js
+scripts/vue/vue.min.js
+scripts/offline.js
+scripts/app.js
+https://fonts.googleapis.com/css?family=Roboto:300,400,700
+statics/fonts/eot/brand-icons.eot
+statics/fonts/eot/icons.eot
+statics/fonts/eot/outline-icons.eot
+statics/fonts/svg/brand-icons.svg
+statics/fonts/svg/icons.svg
+statics/fonts/svg/outline-icons.svg
+statics/fonts/ttf/brand-icons.ttf
+statics/fonts/ttf/icons.ttf
+statics/fonts/ttf/outline-icons.ttf
+statics/fonts/woff/brand-icons.woff
+statics/fonts/woff/icons.woff
+statics/fonts/woff/outline-icons.woff
+statics/fonts/woff2/brand-icons.woff2
+statics/fonts/woff2/icons.woff2
+statics/fonts/woff2/outline-icons.woff2
+statics/styles/semantic/semantic.css
+statics/styles/site.css
+index.html

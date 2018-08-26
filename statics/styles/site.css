@@ -1,0 +1,75 @@
+/*************************/
+/***** master styles *****/
+/*************************/
+
+h1, h2, h3, h4, h5, h6,
+p, div, label, input, button {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+html {
+  min-height: 100% !important;
+  position: relative;
+}
+
+img {
+  max-width: 100% !important;
+}
+
+
+/*************************/
+/***** other styles ******/
+/*************************/
+
+.large.text {
+  font-size: 2rem;
+}
+.hidden {
+  display: none;
+}
+.progress.circle {
+  display: block;
+  margin: auto;
+  width: 90%;
+}
+circle.background {
+  fill: none;
+  stroke: #f1f1f1;
+  stroke-width: 0.4;
+}
+circle.progress {
+  fill: none;
+  stroke: #00b5ad;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+  transition: stroke-dashoffset 1s linear;
+}
+text {
+  fill: #bbb;
+  font-size: 5px;
+  text-anchor: middle;
+}
+.intervals .row {
+  margin: 5px 0 !important;
+  padding: 0 !important;
+}
+.intervals .row:first-child {
+  margin-top: 10px !important;
+}
+.intervals .row:last-child {
+  margin-bottom: 10px !important;
+}
+.intervals .column {
+  padding: 0 0.7rem !important;
+}
+.parameters > * {
+  margin-bottom: 10px;
+}
+.interval.title {
+  font-size: 4em;
+  margin: 10px 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
