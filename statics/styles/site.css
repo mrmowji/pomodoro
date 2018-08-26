@@ -73,3 +73,9 @@ text {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.github.star {
+  float: right;
+  height: 20px !important;
+  width: 75px !important;
+}
