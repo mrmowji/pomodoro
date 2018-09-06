@@ -67,15 +67,18 @@
           <h2 class="interval title">{{ title }}</h2>
           <div is="progress-circle" :percentage="secondsPassed / totalTimeInSeconds"></div>
           <div class="ui divider"></div>
-          <div class="ui fluid labeled icon buttons">
+          <div class="ui fluid large icon buttons">
             <button class="ui blue button" :disabled="state === 'started'" @click="start()">
-              <i class="play icon"></i>Start
+              <i class="play icon"></i>
+              <span class="computer tablet only">Start</span>
             </button>
             <button class="ui orange button" :disabled="state !== 'started'" @click="pause()">
-              <i class="pause icon"></i>Pause
+              <i class="pause icon"></i>
+              <span class="computer tablet only">Pause</span>
             </button>
             <button class="ui red button" :disabled="state !== 'started' && state !== 'paused'" @click="stop()">
-              <i class="stop icon"></i>Stop
+              <i class="stop icon"></i>
+              <span class="computer tablet only">Stop</span>
             </button>
           </div>
           <div class="ui divider"></div>

@@ -79,3 +79,33 @@ text {
   height: 20px !important;
   width: 75px !important;
 }
+
+.mobile.only, .tablet.only {
+  display: none !important;
+}
+
+@media screen and (min-width: 992px) {
+  .computer.only {
+    display: initial !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .computer.only {
+    display: none !important;
+  }
+
+  .tablet.only {
+    display: initial !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .computer.only, .tablet.only {
+    display: none !important;
+  }
+
+  .mobile.only {
+    display: initial !important;
+  }
+}
