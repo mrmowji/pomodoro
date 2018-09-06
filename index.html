@@ -67,7 +67,7 @@
           <h2 class="interval title">{{ title }}</h2>
           <div is="progress-circle" :percentage="secondsPassed / totalTimeInSeconds"></div>
           <div class="ui divider"></div>
-          <div class="ui fluid large icon buttons">
+          <div class="ui fluid large icon button">
             <button class="ui blue button" :disabled="state === 'started'" @click="start()">
               <i class="play icon"></i>
               <span class="computer tablet only">Start</span>
