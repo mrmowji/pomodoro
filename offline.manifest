@@ -19,6 +19,6 @@ statics/fonts/woff2/brand-icons.woff2
 statics/fonts/woff2/icons.woff2
 statics/fonts/woff2/outline-icons.woff2
 statics/styles/semantic/semantic.css
-statics/styles/site.css
+statics/styles/app.css
 statics/audios/work.mp3
 index.html

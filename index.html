@@ -10,7 +10,7 @@
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
   <link href="statics/styles/semantic/semantic.css" rel="stylesheet">
-  <link href="statics/styles/site.css" rel="stylesheet">
+  <link href="statics/styles/app.css" rel="stylesheet">
 </head>
 
 <body>
@@ -82,13 +82,13 @@
           <div class="ui three columns grid">
             <div class="row">
               <div class="left aligned column large text" data-tooltip="Current Task's Remaining Time" data-position="bottom left">
-                {{ leftPaddedMinute }} : {{ leftPaddedSecond }}
+                {{ leftPaddedMinute }}:{{ leftPaddedSecond }}
               </div>
               <div class="center aligned column large text" data-tooltip="Total Remaining Time" data-position="bottom center">
                 {{ totalTimeInSeconds - secondsPassed }}
               </div>
               <div class="right aligned column large text" data-tooltip="Current Round / Number of Rounds" data-position="bottom right">
-                {{ currentRound }} / {{ numberOfRounds }}
+                {{ currentRound }}/{{ numberOfRounds }}
               </div>
             </div>
           </div>
