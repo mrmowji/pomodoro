@@ -74,10 +74,9 @@ text {
   white-space: nowrap;
 }
 
-.github.star {
+.github.icon {
   float: right;
-  height: 20px !important;
-  width: 75px !important;
+  margin-right: 0 !important;
 }
 
 .mobile.only, .tablet.only {

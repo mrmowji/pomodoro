@@ -4,6 +4,11 @@ const STATES = {
   PAUSED: "paused",
 };
 
+const TIME_UNITS = {
+  MINUTE: "min",
+  SECOND: "sec",
+};
+
 Vue.component("progress-circle", {
   template: "#progress-circle",
   props: ["percentage"],
@@ -13,23 +18,43 @@ new Vue({
   el: "#app",
   data: {
     state: STATES.STOPPED,
-    minute: 0,
-    second: 20,
+    minute: 25,
+    second: 0,
     title: "Work",
-    numberOfIntervals: 1,
+    numberOfIntervals: 8,
     intervals: [
-      { title: "Work", length: 20 }
+      { title: "Work", length: 25, unit: TIME_UNITS.MINUTE },
+      { title: "Rest", length: 5, unit: TIME_UNITS.MINUTE },
+      { title: "Work", length: 25, unit: TIME_UNITS.MINUTE },
+      { title: "Rest", length: 5, unit: TIME_UNITS.MINUTE },
+      { title: "Work", length: 25, unit: TIME_UNITS.MINUTE },
+      { title: "Rest", length: 5, unit: TIME_UNITS.MINUTE },
+      { title: "Work", length: 25, unit: TIME_UNITS.MINUTE },
+      { title: "Rest", length: 15, unit: TIME_UNITS.MINUTE },
     ],
     currentIntervalIndex: 0,
-    numberOfRounds: 1,
+    numberOfRounds: 4,
     currentRound: 1,
-    secondsPassed: 0
+    secondsPassed: 0,
+    totalTimeInSeconds: 31200,
+  },
+  mounted: function() {
   },
   watch: {
     intervals: {
       handler: function (value, oldValue) {
-        this.minute = Math.floor(this.intervals[0].length / 60);
-        this.second = this.intervals[0].length % 60;
+        let intervalsLength = 0;
+        for (let i = 0; i < this.intervals.length; i++) {
+          this.intervals[i].lengthInSeconds =
+            (this.intervals[i].unit === TIME_UNITS.SECOND) ?
+            (this.intervals[i].length) :
+            (this.intervals[i].length * 60);
+          intervalsLength += parseInt(this.intervals[i].lengthInSeconds);
+        }
+        this.totalTimeInSeconds = (intervalsLength) * this.numberOfRounds;
+
+        this.minute = Math.floor(this.intervals[0].lengthInSeconds / 60);
+        this.second = this.intervals[0].lengthInSeconds % 60;
         this.title = this.intervals[0].title;
       },
       deep: true
@@ -39,33 +64,60 @@ new Vue({
         this.intervals.pop();
       }
       else if (this.numberOfIntervals > this.intervals.length) {
-        this.intervals.push({ title: "Work", length: 20 })
+        this.addNewInterval({ });
       }
     },
   },
   computed: {
-    totalTimeInSeconds: function() {
-      var i;
-      var intervalsLength = 0;
-      for (i = 0; i < this.intervals.length; i++) {
-        intervalsLength += parseInt(this.intervals[i].length);
+    remainingTime: function() {
+      let remainingTimeInSeconds = this.totalTimeInSeconds - this.secondsPassed;
+      let hours = Math.floor(remainingTimeInSeconds / 3600);
+      let minutes = Math.floor((remainingTimeInSeconds % 3600) / 60);
+      let seconds = (remainingTimeInSeconds % 3600) % 60;
+      let result = "";
+      if (hours > 0) {
+        result += this.padLeft(hours, 2) + ":";
       }
-      return (intervalsLength) * this.numberOfRounds;
-    },
-    leftPaddedMinute: function() {
-      if (this.minute < 10) {
-        return "0" + this.minute;
-      }
-      return this.minute;
-    },
-    leftPaddedSecond: function() {
-      if (this.second < 10) {
-        return "0" + this.second;
-      }
-      return this.second;
+      result += this.padLeft(minutes, 2) + ":";
+      result += this.padLeft(seconds, 2);
+      return result;
     },
   },
   methods: {
+    padLeft: function(number, numberOfDigits) {
+      let stringNumber = number.toString();
+      if (stringNumber.length < numberOfDigits) {
+        for (let i = 0; i < numberOfDigits - stringNumber.length; i++) {
+          stringNumber = "0" + stringNumber;
+        }
+      }
+      return stringNumber;
+    },
+    addNewInterval: function(interval) {
+      if (interval.title === undefined) {
+        if (this.intervals.length > 0) {
+          if (this.intervals[this.intervals.length - 1].title.toLowerCase().trim() === "work") {
+            interval.title = "Rest";
+          } else {
+            interval.title = "Work";
+          }
+        }
+      }
+      if (interval.length === undefined) {
+        interval.length = 20;
+      }
+      if (interval.unit === undefined) {
+        interval.unit = TIME_UNITS.SECOND;
+      }
+      this.intervals.push(interval);
+    },
+    toggleIntervalUnit: function(index) {
+      if (this.intervals[index].unit === TIME_UNITS.SECOND) {
+        this.intervals[index].unit = TIME_UNITS.MINUTE;
+      } else {
+        this.intervals[index].unit = TIME_UNITS.SECOND;
+      }
+    },
     start: function() {
       this.state = STATES.STARTED;
       this.tick();
@@ -81,8 +133,8 @@ new Vue({
       this.currentIntervalIndex = 0;
       this.currentRound = 1;
       this.secondsPassed = 0;
-      this.minute = Math.floor(this.intervals[0].length / 60);
-      this.second = this.intervals[0].length % 60;
+      this.minute = Math.floor(this.intervals[0].lengthInSeconds / 60);
+      this.second = this.intervals[0].lengthInSeconds % 60;
       this.title = this.intervals[0].title;
     },
     tick: function() {
@@ -107,8 +159,8 @@ new Vue({
           return;
         }
       }
-      this.minute = Math.floor((this.intervals[this.currentIntervalIndex].length - 1) / 60);
-      this.second = (this.intervals[this.currentIntervalIndex].length - 1) % 60;
+      this.minute = Math.floor((this.intervals[this.currentIntervalIndex].lengthInSeconds - 1) / 60);
+      this.second = (this.intervals[this.currentIntervalIndex].lengthInSeconds - 1) % 60;
       this.title = this.intervals[this.currentIntervalIndex].title;
     }
   }

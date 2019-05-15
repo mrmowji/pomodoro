@@ -31,23 +31,27 @@
           <h1 class="ui header">
             Vuemodoro
             <div class="sub header">
-              <iframe class="github star" src="https://ghbtns.com/github-btn.html?user=mrmowji&amp;repo=vuemodoro&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="75px" height="20px"></iframe>
+              <a href="https://github.com/mrmowji/vuemodoro"><i class="github large icon"></i></a>
               Another interval timer
             </div>
           </h1>
           <div class="ui divider"></div>
-          <div class="parameters">
-            <div class="ui fluid labeled input">
-              <label class="ui label">Rounds</label>
-              <input min="1" v-model="numberOfRounds" :disabled="state === 'started' || state === 'paused'" type="number">
+          <div class="ui grid two column stackable">
+            <div class="column">
+              <div class="ui fluid labeled input">
+                <label class="ui label">Rounds</label>
+                <input min="1" v-model="numberOfRounds" :disabled="state === 'started' || state === 'paused'" type="number">
+              </div>
             </div>
-            <div class="ui fluid labeled input">
-              <label class="ui label">Intervals</label>
-              <input min="1" v-model="numberOfIntervals" :disabled="state === 'started' || state === 'paused'" type="number">
+            <div class="column">
+              <div class="ui fluid labeled input">
+                <label class="ui label">Intervals</label>
+                <input min="1" v-model="numberOfIntervals" :disabled="state === 'started' || state === 'paused'" type="number">
+              </div>
             </div>
           </div>
           <div class="ui segment grid two columns intervals">
-            <div v-for="interval in intervals" class="row">
+            <div v-for="(interval, intervalIndex) in intervals" class="row">
               <div class="column">
                 <div class="ui fluid labeled input">
                   <label class="ui label">Title</label>
@@ -57,7 +61,7 @@
               <div class="column">
                 <div class="ui fluid right labeled input">
                   <input min="1" v-model="interval.length" type="number" :disabled="state === 'started' || state === 'paused'">
-                  <label class="ui label">sec.</label>
+                  <label class="ui label" v-on:click="toggleIntervalUnit(intervalIndex)">{{ interval.unit }}</label>
                 </div>
               </div>
             </div>
@@ -85,10 +89,10 @@
           <div class="ui three columns grid">
             <div class="row">
               <div class="left aligned column large text" data-tooltip="Current Task's Remaining Time" data-position="bottom left">
-                {{ leftPaddedMinute }}:{{ leftPaddedSecond }}
+                {{ padLeft(minute, 2) }}:{{ padLeft(second, 2) }}
               </div>
               <div class="center aligned column large text" data-tooltip="Total Remaining Time" data-position="bottom center">
-                {{ totalTimeInSeconds - secondsPassed }}
+                {{ remainingTime }}
               </div>
               <div class="right aligned column large text" data-tooltip="Current Round / Number of Rounds" data-position="bottom right">
                 {{ currentRound }}/{{ numberOfRounds }}
