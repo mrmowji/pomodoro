@@ -7,26 +7,6 @@ p, div, label, input, button {
   font-family: 'Roboto', sans-serif !important;
 }
 
-html {
-  min-height: 100% !important;
-  position: relative;
-}
-
-img {
-  max-width: 100% !important;
-}
-
-
-/*************************/
-/***** other styles ******/
-/*************************/
-
-.large.text {
-  font-size: 2rem;
-}
-.hidden {
-  display: none;
-}
 .progress.circle {
   display: block;
   margin: auto;
@@ -39,9 +19,9 @@ circle.background {
 }
 circle.progress {
   fill: none;
-  stroke: #00b5ad;
+  /*stroke: #9F7AEA;*/
   stroke-linecap: round;
-  stroke-width: 1.8;
+  stroke-width: 1.7;
   transition: stroke-dashoffset 1s linear;
 }
 text {
@@ -49,62 +29,7 @@ text {
   font-size: 5px;
   text-anchor: middle;
 }
-.intervals .row {
-  margin: 5px 0 !important;
-  padding: 0 !important;
-}
-.intervals .row:first-child {
-  margin-top: 10px !important;
-}
-.intervals .row:last-child {
-  margin-bottom: 10px !important;
-}
-.intervals .column {
-  padding: 0 0.7rem !important;
-}
-.parameters > * {
-  margin-bottom: 10px;
-}
-.interval.title {
-  font-size: 4em;
-  margin: 10px 0;
-  overflow: hidden;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.github.icon {
-  float: right;
-  margin-right: 0 !important;
-}
-
-.mobile.only, .tablet.only {
-  display: none !important;
-}
-
-@media screen and (min-width: 992px) {
-  .computer.only {
-    display: initial !important;
-  }
-}
-
-@media screen and (max-width: 991px) {
-  .computer.only {
-    display: none !important;
-  }
-
-  .tablet.only {
-    display: initial !important;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .computer.only, .tablet.only {
-    display: none !important;
-  }
-
-  .mobile.only {
-    display: initial !important;
-  }
+.-z-1 {
+  z-index: -1;
 }

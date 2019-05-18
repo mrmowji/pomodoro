@@ -3,13 +3,15 @@
 
 <head>
   <title>Vuemodoro</title>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <script src="scripts/vue/vue.min.js"></script>
+  <script src="scripts/vue/vue-router.min.js"></script>
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
-  <link href="statics/styles/semantic/semantic.css" rel="stylesheet">
+  <link href="statics/styles/tailwind.min.css" rel="stylesheet">
   <link href="statics/styles/app.css" rel="stylesheet">
 </head>
 
@@ -17,113 +19,144 @@
 
   <template id="progress-circle">
     <svg class="progress circle" viewBox="1.6 1.6 16.8 16.8">
-      <circle class="background" cx="10" cy="10" r="8"/></circle>
-      <circle class="progress" cx="10" cy="10" r="7" :stroke-dasharray="Math.PI * 2 * 7 + (Math.PI / 2)"
-        :stroke-dashoffset="Math.PI * 2 * 7 * percentage + (Math.PI /2)" /></circle>
-      <text x="62%" y="70%">{{ Math.floor(percentage * 100) }}%</text>
+      <circle class="background" cx="10" cy="10" r="8" />
+      <circle class="progress stroke-current text-purple-500" cx="10" cy="10" r="7"
+        :stroke-dasharray="Math.PI * 2 * 7 + (Math.PI / 2)"
+        :stroke-dashoffset="Math.PI * 2 * 7 * percentage + (Math.PI / 2)" />
+      <circle class="progress stroke-current text-purple-200" cx="10" cy="10" r="5"
+        :stroke-dasharray="Math.PI * 2 * 5 + (Math.PI / 2)"
+        :stroke-dashoffset="Math.PI * 2 * 5 * intervalPercentage + (Math.PI / 2)" />
     </svg>
   </template>
 
-  <div id="app" class="ui basic segment">
-    <div class="ui text container">
-      <div class="ui stackable grid two columns">
-        <div class="column">
-          <h1 class="ui header">
+  <div id="app" class="container mx-auto my-5 md:my-10 lg:w-1/2">
+    <div class="flex md:-mx-5 flex-wrap">
+      <div class="w-full md:w-1/2 px-5 mb-10 md:mb-0">
+        <header class="border-solid border-bottom-black pb-5 mb-5">
+          <h1 class="text-3xl font-bold leading-none">
             Vuemodoro
-            <div class="sub header">
-              <a href="https://github.com/mrmowji/vuemodoro"><i class="github large icon"></i></a>
+            <a class="ml-3" href="https://github.com/mrmowji/vuemodoro" target="_blank">
+              <img src="statics/images/github.svg" class="w-6 inline">
+            </a>
+          </h1>
+          <div class="flex justify-between">
+            <div class="text-gray-500">
               Another interval timer
             </div>
-          </h1>
-          <div class="ui divider"></div>
-          <div class="ui grid two column stackable">
-            <div class="column">
-              <div class="ui fluid labeled input">
-                <label class="ui label">Rounds</label>
-                <input min="1" v-model="numberOfRounds" :disabled="state === 'started' || state === 'paused'" type="number">
-              </div>
-            </div>
-            <div class="column">
-              <div class="ui fluid labeled input">
-                <label class="ui label">Intervals</label>
-                <input min="1" v-model="numberOfIntervals" :disabled="state === 'started' || state === 'paused'" type="number">
-              </div>
-            </div>
           </div>
-          <div class="ui segment grid two columns intervals">
-            <div v-for="(interval, intervalIndex) in intervals" class="row">
-              <div class="column">
-                <div class="ui fluid labeled input">
-                  <label class="ui label">Title</label>
-                  <input v-model="interval.title" type="text" :disabled="state === 'started' || state === 'paused'">
-                </div>
-              </div>
-              <div class="column">
-                <div class="ui fluid right labeled input">
-                  <input min="1" v-model="interval.length" type="number" :disabled="state === 'started' || state === 'paused'">
-                  <label class="ui label" v-on:click="toggleIntervalUnit(intervalIndex)">{{ interval.unit }}</label>
-                </div>
-              </div>
+        </header>
+
+        <div class="border-solid border-bottom-black pb-6 mb-6">
+          <div class="flex justify-between -mx-2">
+            <div class="w-1/2 px-2">
+              <label class="block text-sm text-gray-500">Rounds</label>
+              <input class="block w-full pb-1 focus:border-black border-solid border-b-2 bg-transparent focus:outline-none" min="1"
+                v-model="numberOfRounds" :disabled="state === 'started' || state === 'paused'" type="number">
+            </div>
+            <div class="w-1/2 px-2">
+              <label class="block text-sm text-gray-500">Intervals</label>
+              <input class="block w-full pb-1 focus:border-black border-solid border-b-2 bg-transparent focus:outline-none" min="1"
+                v-model="numberOfIntervals" :disabled="state === 'started' || state === 'paused'" type="number">
             </div>
           </div>
         </div>
-        <div class="column">
-          <h2 class="interval title">{{ title }}</h2>
-          <div is="progress-circle" :percentage="secondsPassed / totalTimeInSeconds"></div>
-          <div class="ui divider"></div>
-          <div class="ui fluid large icon buttons">
-            <button class="ui blue button" :disabled="state === 'started'" @click="start()">
-              <i class="play icon"></i>
-              <span class="computer tablet only">Start</span>
-            </button>
-            <button class="ui orange button" :disabled="state !== 'started'" @click="pause()">
-              <i class="pause icon"></i>
-              <span class="computer tablet only">Pause</span>
-            </button>
-            <button class="ui red button" :disabled="state !== 'started' && state !== 'paused'" @click="stop()">
-              <i class="stop icon"></i>
-              <span class="computer tablet only">Stop</span>
-            </button>
-          </div>
-          <div class="ui divider"></div>
-          <div class="ui three columns grid">
-            <div class="row">
-              <div class="left aligned column large text" data-tooltip="Current Task's Remaining Time" data-position="bottom left">
-                {{ padLeft(minute, 2) }}:{{ padLeft(second, 2) }}
-              </div>
-              <div class="center aligned column large text" data-tooltip="Total Remaining Time" data-position="bottom center">
-                {{ remainingTime }}
-              </div>
-              <div class="right aligned column large text" data-tooltip="Current Round / Number of Rounds" data-position="bottom right">
-                {{ currentRound }}/{{ numberOfRounds }}
-              </div>
+
+        <div class="">
+            <div class="flex justify-between -mx-2 mb-4">
+                <div class="w-1/2 px-2">
+                  <label class="block text-sm text-gray-500">Title</label>
+                </div>
+                <div class="w-1/2 px-2">
+                  <label class="block text-sm text-gray-500">
+                    Length
+                    <!-- <span class="" v-on:click="toggleIntervalUnit(intervalIndex)">({{ interval.unit }})</span> -->
+                  </label>
+                </div>
+            </div>
+          <div v-for="(interval, intervalIndex) in intervals" class="flex justify-between -mx-2 mb-4">
+            <div class="w-1/2 px-2">
+              <input class="block w-full py-1 focus:border-black border-solid border-b-2 bg-transparent  focus:outline-none"
+                v-model="interval.title" type="text" :disabled="state === 'started' || state === 'paused'">
+            </div>
+            <div class="w-1/2 px-2 relative">
+              <input class="block w-full py-1 focus:border-black border-solid border-b-2 bg-transparent focus:outline-none pr-12" min="1"
+                v-model="interval.length" type="number" :disabled="state === 'started' || state === 'paused'">
+                <span class="absolute right-0 bottom-0 text-xs p-2 text-gray-400 border-2 border-gray-300 border-solid mr-2 cursor-pointer"
+                  v-on:click="toggleIntervalUnit(intervalIndex)" :disabled="state === 'started' || state === 'paused'">{{ interval.unit }}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="ui segment">
-        <div>
-          Mojtaba Javan - 2018
+
+      <div class="w-full md:w-1/2 px-5">
+        <h2 class="text-center text-3xl mb-10 leading-none">{{ intervals[currentIntervalIndex].title }}</h2>
+
+        <div is="progress-circle" v-bind="{percentage: secondsPassed / totalTimeInSeconds, intervalPercentage: currentIntervalPercentage}"
+          ></div>
+
+        <div class="flex -mx-3 flex-wrap items-center my-10">
+          <div class="px-3 text-center text-gray-400 w-full">
+            Remaining Time
+          </div>
+          <div class="px-3 text-3xl text-center w-full">
+            {{ remainingTime }}
+          </div>
         </div>
-        <div class="ui horizontal list">
-          <a href="mailto:javan.mojtaba@gmail.com" class="item">
-            Email
-          </a>
-          <a href="https://www.instagram.com/mrmowji" class="item">
-            Instagram
-          </a>
-          <a href="https://www.linkedin.com/in/mrmowji" class="item">
-            LinkedIn
-          </a>
-          <a href="https://t.me/mrmowji" class="item">
-            Telegram
-          </a>
+
+        <div class="mt-5 mb-10 text-center">
+          <button class="mx-2 px-5 py-3 border-red-100 border-2 border-solid rounded-full text-red-500"
+            :disabled="state !== 'started'" @click="pause()">
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="pause" class="w-3 block" role="img"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+              <path fill="currentColor"
+                d="M144 479H48c-26.5 0-48-21.5-48-48V79c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48zm304-48V79c0-26.5-21.5-48-48-48h-96c-26.5 0-48 21.5-48 48v352c0 26.5 21.5 48 48 48h96c26.5 0 48-21.5 48-48z">
+              </path>
+            </svg>
+          </button>
+          <button class="mx-2 px-5 py-2 bg-red-500 rounded-full text-white" :disabled="state === 'started'"
+            @click="start()">
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play" class="w-3 inline mr-2"
+              role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+              <path fill="currentColor"
+                d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z">
+              </path>
+            </svg>
+            Start
+          </button>
+          <button class="mx-2 px-5 py-3 border-red-100 border-2 border-solid rounded-full text-red-500"
+            :disabled="state !== 'started' && state !== 'paused'" @click="stop()">
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="stop" class="w-3 block" role="img"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+              <path fill="currentColor"
+                d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z">
+              </path>
+            </svg>
+          </button>
         </div>
+      </div>
+    </div>
+    <div class="w-full border-solid border-top-black border-t-2 pt-5 mt-5 px-5 md:px-0">
+      <div class="text-gray-500 text-sm">
+        Mojtaba Javan - 2018
+      </div>
+      <div class="">
+        <a href="mailto:javan.mojtaba@gmail.com" class="text-sm text-blue-500 mr-3">
+          Email
+        </a>
+        <a href="https://www.instagram.com/mrmowji" class="text-sm text-blue-500 mr-3">
+          Instagram
+        </a>
+        <a href="https://www.linkedin.com/in/mrmowji" class="text-sm text-blue-500 mr-3">
+          LinkedIn
+        </a>
+        <a href="https://t.me/mrmowji" class="text-sm text-blue-500 mr-3">
+          Telegram
+        </a>
       </div>
     </div>
   </div>
 
   <script src="scripts/app.js"></script>
-  <!--<script src="scripts/offline.js"></script>-->
+
 </body>
 </html>
