@@ -1,4 +1,4 @@
-# Vuemodoro
+# Pomodoro
 
 Another interval timer based on The Pomodoro Technique.
 
